@@ -2,10 +2,12 @@ import typing as tp
 
 import requests
 from requests.adapters import HTTPAdapter
+from requests.exceptions import RetryError
 from requests.packages.urllib3.util.retry import Retry
 
 
-class Session:
+# test done!!!!!!
+class Session(requests.Session):
     """
     Сессия.
 
@@ -16,16 +18,22 @@ class Session:
     """
 
     def __init__(
-        self,
-        base_url: str,
-        timeout: float = 5.0,
-        max_retries: int = 3,
-        backoff_factor: float = 0.3,
+            self,
+            base_url: str,
+            timeout: float = 5.0,
+            max_retries: int = 3,
+            backoff_factor: float = 0.3,
     ) -> None:
-        pass
+        super().__init__()
+        self.retries = Retry(
+            total=max_retries, backoff_factor=backoff_factor, status_forcelist=[500]
+        )
+        self.mount(base_url, HTTPAdapter(max_retries=self.retries))
+        self.base_url = base_url
+        self.timeout = timeout
 
-    def get(self, url: str, *args: tp.Any, **kwargs: tp.Any) -> requests.Response:
-        pass
+    def get(self, url: str, *args: tp.Any, **kwargs: tp.Any) -> requests.Response:  # type:ignore
+        return super().get(self.base_url + "/" + url, *args, **kwargs)
 
-    def post(self, url: str, *args: tp.Any, **kwargs: tp.Any) -> requests.Response:
-        pass
+    def post(self, url: str, *args: tp.Any, **kwargs: tp.Any) -> requests.Response:  # type:ignore
+        return super().post(self.base_url + "/" + url, *args, **kwargs)
