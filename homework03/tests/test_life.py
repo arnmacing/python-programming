@@ -3,7 +3,7 @@ import os
 import random
 import unittest
 
-import life
+from homework03 import life
 
 
 class TestGameOfLife(unittest.TestCase):

@@ -13,35 +13,35 @@ class EgoNetworkTestCase(unittest.TestCase):
         responses.add(
             responses.GET,
             re.compile(
-                f"https://api.vk.com/method/friends.getMutual\?.*target_uids={target_uids}.*"
+                f'https://api.vk.com/method/friends.getMutual\?.*target_uids={target_uids}.*'
             ),
             match_querystring=True,
             json={
-                "response": [
+                'response': [
                     {
-                        "id": 1,
-                        "common_friends": [2, 3],
-                        "common_count": 2,
+                        'id': 1,
+                        'common_friends': [2, 3],
+                        'common_count': 2,
                     },
                     {
-                        "id": 2,
-                        "common_friends": [1, 3, 4],
-                        "common_count": 3,
+                        'id': 2,
+                        'common_friends': [1, 3, 4],
+                        'common_count': 3,
                     },
                     {
-                        "id": 3,
-                        "common_friends": [1, 2],
-                        "common_count": 2,
+                        'id': 3,
+                        'common_friends': [1, 2],
+                        'common_count': 2,
                     },
                     {
-                        "id": 4,
-                        "common_friends": [2],
-                        "common_count": 1,
+                        'id': 4,
+                        'common_friends': [2],
+                        'common_count': 1,
                     },
                     {
-                        "id": 5,
-                        "common_friends": [],
-                        "common_count": 0,
+                        'id': 5,
+                        'common_friends': [],
+                        'common_count': 0,
                     },
                 ]
             },
