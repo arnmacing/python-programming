@@ -1,5 +1,6 @@
 import curses
 
+import itertools
 from life import GameOfLife
 from ui import UI
 
@@ -14,11 +15,10 @@ class Console(UI):
 
     def draw_grid(self, screen) -> None:
         grid = self.life.curr_generation  # текущее поколение клеток
-        for i in range(len(grid)):
-            for j in range(len(grid[0])):
-                cell = "*" if grid[i][j] == 1 else " "  # живая/мёртвая
-                screen.addch(i + 1, j + 1,
-                             cell)  # принимает символ, который может быть либо строкой длины 1, либо промежуточным тестированием длины 1, либо целым числом
+        for i, j in itertools.product(range(len(grid)), range(len(grid[0]))):
+            cell = "*" if grid[i][j] == 1 else " "  # живая/мёртвая
+            screen.addch(i + 1, j + 1,
+                         cell)  # принимает символ, который может быть либо строкой длины 1, либо промежуточным тестированием длины 1, либо целым числом
 
     def run(self) -> None:
         screen = curses.initscr()
