@@ -22,8 +22,7 @@ def ego_network(
     friends = friends or get_friends(user_id).items  # type: ignore
     mutual_friends = get_mutual(source_uid=user_id, target_uids=friends)
     for target in mutual_friends:
-        for friend in target['common_friends']:  # type: ignore
-            network.append((target['id'], friend))  # type: ignore
+        network.extend((target['id'], friend) for friend in target['common_friends'])
     return network
 
 

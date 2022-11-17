@@ -21,13 +21,8 @@ def get_posts_2500(
         extended: int = 0,
         fields: tp.Optional[tp.List[str]] = None,
 ) -> tp.Dict[str, tp.Any]:
-    if fields:
-        code_fields = '?'.join(fields)
-    else:
-        code_fields = ''
-
-    if max_count > 2500:
-        max_count = 2500
+    code_fields = '?'.join(fields) if fields else ''
+    max_count = min(max_count, 2500)
     if max_count <= 100:
         code = f'''
         return API.wall.get({{
