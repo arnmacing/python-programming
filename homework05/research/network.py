@@ -6,27 +6,32 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import pandas as pd
 
-from vkapi.friends import get_friends, get_mutual
+from vkapi.friends import get_mutual, get_friends
+
+'''
+Построить эгоцентричный граф друзей.
+'''
 
 
+# test done!
 def ego_network(
-    user_id: tp.Optional[int] = None, friends: tp.Optional[tp.List[int]] = None
+        user_id: tp.Optional[int] = None,  # Идентификатор пользователя, для которого строится граф друзей.
+        friends: tp.Optional[tp.List[int]] = None  # Идентификаторы друзей, между которыми устанавливаются связи.
 ) -> tp.List[tp.Tuple[int, int]]:
-    """
-    Построить эгоцентричный граф друзей.
-
-    :param user_id: Идентификатор пользователя, для которого строится граф друзей.
-    :param friends: Идентификаторы друзей, между которыми устанавливаются связи.
-    """
-    pass
+    network = []
+    friends = friends or get_friends(user_id).items  # type: ignore
+    mutual_friends = get_mutual(source_uid=user_id, target_uids=friends)
+    for target in mutual_friends:
+        network.extend((target['id'], friend) for friend in target['common_friends'])
+    return network
 
 
 def plot_ego_network(net: tp.List[tp.Tuple[int, int]]) -> None:
     graph = nx.Graph()
     graph.add_edges_from(net)
     layout = nx.spring_layout(graph)
-    nx.draw(graph, layout, node_size=10, node_color="black", alpha=0.5)
-    plt.title("Ego Network", size=15)
+    nx.draw(graph, layout, node_size=10, node_color='black', alpha=0.5)
+    plt.title('Ego Network', size=15)
     plt.show()
 
 
@@ -36,7 +41,7 @@ def plot_communities(net: tp.List[tp.Tuple[int, int]]) -> None:
     layout = nx.spring_layout(graph)
     partition = community_louvain.best_partition(graph)
     nx.draw(graph, layout, node_size=25, node_color=list(partition.values()), alpha=0.8)
-    plt.title("Ego Network", size=15)
+    plt.title('Ego Network', size=15)
     plt.show()
 
 
@@ -51,18 +56,22 @@ def get_communities(net: tp.List[tp.Tuple[int, int]]) -> tp.Dict[int, tp.List[in
 
 
 def describe_communities(
-    clusters: tp.Dict[int, tp.List[int]],
-    friends: tp.List[tp.Dict[str, tp.Any]],
-    fields: tp.Optional[tp.List[str]] = None,
+        clusters: tp.Dict[int, tp.List[int]],
+        friends: tp.List[tp.Dict[str, tp.Any]],
+        fields: tp.Optional[tp.List[str]] = None,
 ) -> pd.DataFrame:
     if fields is None:
-        fields = ["first_name", "last_name"]
+        fields = ['first_name', 'last_name']
 
     data = []
     for cluster_n, cluster_users in clusters.items():
         for uid in cluster_users:
             for friend in friends:
-                if uid == friend["id"]:
+                if uid == friend['id']:
                     data.append([cluster_n] + [friend.get(field) for field in fields])  # type: ignore
                     break
-    return pd.DataFrame(data=data, columns=["cluster"] + fields)
+    return pd.DataFrame(data=data, columns=['cluster'] + fields)
+
+
+net = ego_network(user_id=131912431)
+plot_communities(net)
