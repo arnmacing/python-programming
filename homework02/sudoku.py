@@ -1,3 +1,4 @@
+import itertools
 import pathlib
 import random
 import typing as tp
@@ -14,8 +15,7 @@ def read_sudoku(path: tp.Union[str, pathlib.Path]) -> tp.List[tp.List[str]]:
 
 def create_grid(puzzle: str) -> tp.List[tp.List[str]]:
     digits = [c for c in puzzle if c in "123456789."]  # создаётся массив из каждого прочитанного элементе
-    grid = group(digits, 9)
-    return grid
+    return group(digits, 9)
 
 
 def display(grid: tp.List[tp.List[str]]) -> None:
@@ -57,11 +57,10 @@ def get_block(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[s
 
 
 def find_empty_positions(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.Tuple[int, int]]:
-    for row in range(len(grid)):
-        for col in range(len(grid)):
-            if grid[row][col] == ".":
-                # возвращает первую попавшуюся свободную позицию
-                return row, col
+    for row, col in itertools.product(range(len(grid)), range(len(grid))):
+        if grid[row][col] == ".":
+            # возвращает первую попавшуюся свободную позицию
+            return row, col
 
 
 def find_possible_values(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.Set[str]:
@@ -102,7 +101,7 @@ def generate_sudoku(N: int) -> tp.List[tp.List[str]]:
     # создает новый судоку, заполненный на N элементов
     grid = solve([['.'] * 9 for _ in range(9)])
     random_sudoku = solve(grid)
-    for p in range(81 - N):
+    for _ in range(81 - N):
         row, col = random.randint(0, 8), random.randint(0, 8)
         while random_sudoku[row][col] == ".":
             row, col = random.randint(0, 8), random.randint(0, 8)
@@ -112,11 +111,10 @@ def generate_sudoku(N: int) -> tp.List[tp.List[str]]:
 
 if __name__ == "__main__":
     # строка выше вернет True только в том случае, если программа будет запущена прямо
-    for fname in ["puzzle1.txt", "puzzle2.txt", "puzzle3.txt"]:
-        grid = read_sudoku(fname)
+    for file_name in ["puzzle1.txt", "puzzle2.txt", "puzzle3.txt"]:
+        grid = read_sudoku(file_name)
         display(grid)
-        solution = solve(grid)
-        if not solution:
-            print(f"Puzzle {fname} can't be solved")
-        else:
+        if solution := solve(grid):
             display(solution)
+        else:
+            print(f"Puzzle {file_name} can't be solved")
