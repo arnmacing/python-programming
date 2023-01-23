@@ -25,8 +25,7 @@ def display(grid: tp.List[tp.List[str]]) -> None:
     for row in range(9):
         print(
             "".join(
-                grid[row][col].center(width) + ("|" if str(col) in "25" else "")
-                for col in range(9)
+                grid[row][col].center(width) + ("|" if str(col) in "25" else "") for col in range(9)
             )
         )
         if str(row) in "25":
@@ -46,7 +45,7 @@ def group(values: tp.List[T], n: int) -> tp.List[tp.List[T]]:
     # Создаетcя новый список, в котором каждый элемент
     # списка является результатом некоторой операции,
     # примененной к каждому элементу
-    return [values[idx: idx + n] for idx in range(0, len(values), n)]
+    return [values[idx : idx + n] for idx in range(0, len(values), n)]
     # срез массива
 
 
@@ -91,11 +90,7 @@ def get_block(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[s
     col = pos[1] // 3 * 3
     # Возвращает все значения из квадрата,
     # в который попадает позиция pos (всего 9 квадратов размером 3*3).
-    return [
-        grid[row][column]
-        for row in range(row, row + 3)
-        for column in range(col, col + 3)
-    ]
+    return [grid[row][column] for row in range(row, row + 3) for column in range(col, col + 3)]
 
 
 def find_empty_positions(
@@ -110,9 +105,7 @@ def find_empty_positions(
     return None
 
 
-def find_possible_values(
-        grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]
-) -> tp.Set[str]:
+def find_possible_values(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.Set[str]:
     """Вернуть множество возможных значения для указанной позиции
 
     >>> grid = read_sudoku('puzzle1.txt')
