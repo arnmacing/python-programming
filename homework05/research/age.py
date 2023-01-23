@@ -27,5 +27,6 @@ def age_predict(user_id: int) -> tp.Optional[float]:
         return None
     return statistics.median(ages)  # Медианный возраст пользователя.
 
+
 if __name__ == "__main__":
     print(age_predict(131912431))
