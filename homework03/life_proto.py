@@ -35,13 +35,9 @@ class GameOfLife:
     def draw_lines(self) -> None:
         """Отрисовать сетку"""
         for x in range(0, self.width, self.cell_size):
-            pygame.draw.line(
-                self.screen, pygame.Color("black"), (x, 0), (x, self.height)
-            )
+            pygame.draw.line(self.screen, pygame.Color("black"), (x, 0), (x, self.height))
         for y in range(0, self.height, self.cell_size):
-            pygame.draw.line(
-                self.screen, pygame.Color("black"), (0, y), (self.width, y)
-            )
+            pygame.draw.line(self.screen, pygame.Color("black"), (0, y), (self.width, y))
 
     def run(self) -> None:
         """Запустить игру"""
@@ -102,11 +98,7 @@ class GameOfLife:
             for w in range(self.cell_width):
                 y = h * self.cell_size
                 x = w * self.cell_size
-                color = (
-                    pygame.Color("white")
-                    if self.grid[h][w] == 0
-                    else pygame.Color("green")
-                )
+                color = pygame.Color("white") if self.grid[h][w] == 0 else pygame.Color("green")
                 # принимает: screen - где нужно отрисовать прямоугольник; цвет; координаты прямоугольника (x,y,
                 # длина a,длина b)
                 pygame.draw.rect(

@@ -15,13 +15,9 @@ class GUI(UI):
     def draw_lines(self) -> None:
         # Copy from previous assignment
         for x in range(0, self.width, self.cell_size):
-            pygame.draw.line(
-                self.screen, pygame.Color("black"), (0, x), (self.height, x)
-            )
+            pygame.draw.line(self.screen, pygame.Color("black"), (0, x), (self.height, x))
         for y in range(0, self.height, self.cell_size):
-            pygame.draw.line(
-                self.screen, pygame.Color("black"), (y, 0), (y, self.width)
-            )
+            pygame.draw.line(self.screen, pygame.Color("black"), (y, 0), (y, self.width))
 
     def draw_grid(self) -> None:
         # Copy from previous assignment
@@ -30,9 +26,7 @@ class GUI(UI):
             x = 0
             for cell in row:
                 color = pygame.Color("green") if cell else pygame.Color("white")
-                pygame.draw.rect(
-                    self.screen, color, (y, x, self.cell_size, self.cell_size)
-                )
+                pygame.draw.rect(self.screen, color, (y, x, self.cell_size, self.cell_size))
                 x += self.cell_size
             y += self.cell_size
 
@@ -52,9 +46,7 @@ class GUI(UI):
                 if event.type == pygame.QUIT:  # выход
                     running = False
 
-                if (
-                    event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE
-                ):  # пауза
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:  # пауза
                     paused = not paused
 
                 if not self.life.is_changing:  # не изменено состояние клеток
@@ -66,9 +58,7 @@ class GUI(UI):
 
             if paused:
                 if clicked:
-                    prev_cell_state = self.life.curr_generation[
-                        click_y // self.cell_size
-                    ][
+                    prev_cell_state = self.life.curr_generation[click_y // self.cell_size][
                         click_x // self.cell_size
                     ]  # предыдущее состояние ячейки
                     self.life.curr_generation[click_y // self.cell_size][

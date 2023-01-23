@@ -110,6 +110,4 @@ class GameOfLife:
         Сохранить текущее состояние клеток в указанный файл.
         """
         with filename.open("w") as file:
-            file.write(
-                "\n".join(["".join(map(str, col)) for col in self.curr_generation])
-            )
+            file.write("\n".join(["".join(map(str, col)) for col in self.curr_generation]))
