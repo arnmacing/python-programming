@@ -46,7 +46,7 @@ def group(values: tp.List[T], n: int) -> tp.List[tp.List[T]]:
     # Создаетcя новый список, в котором каждый элемент
     # списка является результатом некоторой операции,
     # примененной к каждому элементу
-    return [values[idx : idx + n] for idx in range(0, len(values), n)]
+    return [values[idx: idx + n] for idx in range(0, len(values), n)]
     # срез массива
 
 
@@ -99,7 +99,7 @@ def get_block(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[s
 
 
 def find_empty_positions(
-    grid: tp.List[tp.List[str]],
+        grid: tp.List[tp.List[str]],
 ) -> tp.Optional[tp.Tuple[int, int]]:
     """Найти первую свободную позицию в пазле"""
     for row in range(len(grid)):
@@ -111,7 +111,7 @@ def find_empty_positions(
 
 
 def find_possible_values(
-    grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]
+        grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]
 ) -> tp.Set[str]:
     """Вернуть множество возможных значения для указанной позиции
 
@@ -125,10 +125,10 @@ def find_possible_values(
     """
     # значения, которые на эту позицию можно поставить
     return (
-        set("123456789")
-        - set(get_row(grid, pos))
-        - set(get_col(grid, pos))
-        - set(get_block(grid, pos))
+            set("123456789")
+            - set(get_row(grid, pos))
+            - set(get_col(grid, pos))
+            - set(get_block(grid, pos))
     )
 
 
