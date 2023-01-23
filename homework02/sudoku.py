@@ -94,7 +94,7 @@ def get_block(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[s
 
 
 def find_empty_positions(
-        grid: tp.List[tp.List[str]],
+    grid: tp.List[tp.List[str]],
 ) -> tp.Optional[tp.Tuple[int, int]]:
     """Найти первую свободную позицию в пазле"""
     for row in range(len(grid)):
@@ -118,10 +118,10 @@ def find_possible_values(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -
     """
     # значения, которые на эту позицию можно поставить
     return (
-            set("123456789")
-            - set(get_row(grid, pos))
-            - set(get_col(grid, pos))
-            - set(get_block(grid, pos))
+        set("123456789")
+        - set(get_row(grid, pos))
+        - set(get_col(grid, pos))
+        - set(get_block(grid, pos))
     )
 
 
