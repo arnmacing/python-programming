@@ -18,11 +18,11 @@ def ego_network(
     :param friends: Идентификаторы друзей, между которыми устанавливаются связи.
     """
     network = []
-    friends = friends or get_friends(user_id).items
-    mutual_friends = get_mutual(source_uid=user_id, target_uids=friends)
-    for target in mutual_friends:
-        for friend in target["common_friends"]:
-            network.append((target["id"], friend))
+    mut_friends = get_mutual(source_uid=user_id, target_uids=friends)
+    for some_friend in mut_friends:
+        id_s_friend = some_friend["id"]  # type: ignore
+        network.extend((id_s_friend, com_fr) for com_fr in some_friend["common_friends"])
+
     return network
 
 
@@ -56,9 +56,9 @@ def get_communities(net: tp.List[tp.Tuple[int, int]]) -> tp.Dict[int, tp.List[in
 
 
 def describe_communities(
-    clusters: tp.Dict[int, tp.List[int]],
-    friends: tp.List[tp.Dict[str, tp.Any]],
-    fields: tp.Optional[tp.List[str]] = None,
+        clusters: tp.Dict[int, tp.List[int]],
+        friends: tp.List[tp.Dict[str, tp.Any]],
+        fields: tp.Optional[tp.List[str]] = None,
 ) -> pd.DataFrame:
     if fields is None:
         fields = ["first_name", "last_name"]
@@ -71,3 +71,8 @@ def describe_communities(
                     data.append([cluster_n] + [friend.get(field) for field in fields])  # type: ignore
                     break
     return pd.DataFrame(data=data, columns=["cluster"] + fields)
+
+
+if __name__ == "__main__":
+    net = ego_network(131912431)
+    plot_communities(net)

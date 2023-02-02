@@ -5,19 +5,20 @@ from string import Template
 
 import pandas as pd
 from pandas import json_normalize
+
 from vkapi import config, session
 from vkapi.exceptions import APIError
 
 
 def get_posts_2500(
-    owner_id: str = "",
-    domain: str = "",
-    offset: int = 0,
-    count: int = 10,
-    max_count: int = 2500,
-    filter: str = "owner",
-    extended: int = 0,
-    fields: tp.Optional[tp.List[str]] = None,
+        owner_id: str = "",
+        domain: str = "",
+        offset: int = 0,
+        count: int = 10,
+        max_count: int = 2500,
+        filter: str = "owner",
+        extended: int = 0,
+        fields: tp.Optional[tp.List[str]] = None,
 ) -> tp.Dict[str, tp.Any]:
     """
     Возвращает список записей со стены пользователя или сообщества.
@@ -32,24 +33,19 @@ def get_posts_2500(
     :param fields: Список дополнительных полей для профилей и сообществ, которые необходимо вернуть.
     :param progress: Callback для отображения прогресса.
     """
-    if fields:
-        code_fields = "?".join(fields)
-    else:
-        code_fields = ""
-
-    if max_count > 2500:
-        max_count = 2500
+    code_fields = "?".join(fields) if fields else ""
+    max_count = min(max_count, 2500)
     if max_count <= 100:
         code = f"""
         return API.wall.get({{
-        'owner_id': '{owner_id}',
-        'domain': '{domain}',
-        'offset': '{offset}',
-        'count': '{max_count}',
-        'filter': '{filter}',
-        'extended': '{extended}',
-        'fields':'{code_fields}',
-        'v':{config.VK_CONFIG['version']}
+            "owner_id": "{owner_id}",
+            "domain": "{domain}",
+            "offset": {offset},
+            "count": {max_count},
+            "filter": "{filter}",
+            "extended": {extended},
+            "fields": "{code_fields}",
+            "v": {config.VK_CONFIG["version"]}
         }}).items;
         """
     else:
@@ -63,19 +59,20 @@ def get_posts_2500(
                 count = {max_count} - wall_records.length;
             }};
             wall_records = wall_records + API.wall.get({{
-                'owner_id': '{owner_id}',
-                'domain': '{domain}',
-                'offset': offset,
-                'count': count,
-                'filter': '{filter}',
-                'extended': {extended},
-                'fields': '{code_fields}',
-                'v': {config.VK_CONFIG['version']}
+                "owner_id": "{owner_id}",
+                "domain": "{domain}",
+                "offset": offset,
+                "count": count,
+                "filter": "{filter}",
+                "extended": {extended},
+                "fields": "{code_fields}",
+                "v": {config.VK_CONFIG["version"]}
             }}).items;
             offset = offset + 100;
         }};
-        return wall_records;        
+        return wall_records;
         """
+
     response = session.post(
         url="execute",
         data={
@@ -90,15 +87,14 @@ def get_posts_2500(
 
 
 def get_wall_execute(
-    owner_id: str = "",
-    domain: str = "",
-    offset: int = 0,
-    count: int = 10,
-    max_count: int = 2500,
-    filter: str = "owner",
-    extended: int = 0,
-    fields: tp.Optional[tp.List[str]] = None,
-    progress=None,
+        owner_id: str = "",
+        domain: str = "",
+        offset: int = 0,
+        count: int = 10,
+        filter: str = "owner",
+        extended: int = 0,
+        fields: tp.Optional[tp.List[str]] = None,
+        progress=None,
 ) -> pd.DataFrame:
     """
     Возвращает список записей со стены пользователя или сообщества.
@@ -109,23 +105,23 @@ def get_wall_execute(
     :param domain: Короткий адрес пользователя или сообщества.
     :param offset: Смещение, необходимое для выборки определенного подмножества записей.
     :param count: Количество записей, которое необходимо получить (0 - все записи).
-    :param max_count: Максимальное число записей, которое может быть получено за один запрос.
     :param filter: Определяет, какие типы записей на стене необходимо получить.
     :param extended: 1 — в ответе будут возвращены дополнительные поля profiles и groups, содержащие информацию о пользователях и сообществах.
     :param fields: Список дополнительных полей для профилей и сообществ, которые необходимо вернуть.
     :param progress: Callback для отображения прогресса.
     """
     code = f"""
-        return API.wall.get({{
-        'owner_id': '{owner_id}',
-        'domain':'{domain}',
-        'offset':{offset},
-        'count':'1',
-        'filter':'{filter}',
-        'extended':{extended},
-        'v': {config.VK_CONFIG['version']}
-        }});
-        """
+    return API.wall.get({{
+        "owner_id": "{owner_id}",
+        "domain": "{domain}",
+        "offset": {offset},
+        "count": "1",
+        "filter": "{filter}",
+        "extended": {extended},
+        "v": {config.VK_CONFIG["version"]}
+    }});
+    """
+
     response = session.post(
         url="execute",
         data={
@@ -137,16 +133,22 @@ def get_wall_execute(
     if "error" in response:
         raise APIError
     posts = response["response"]
-    if response["respose"]["count"] - offset > count and count != 0:
+
+    if response["response"]["count"] - offset > count and count != 0:
         max_count = count
     else:
         max_count = response["response"]["count"] - offset
+
     if max_count == 0:
         return json_normalize(posts["items"])
+
     window = range(0, max_count, 100)
+
     if progress:
         window = progress(window)
+
     num_records = max_count - len(posts)
+
     for _ in window:
         try:
             posts2500 = get_posts_2500(
@@ -163,6 +165,7 @@ def get_wall_execute(
                 num_records = max_count - len(posts)
         except:
             raise APIError
-    time.sleep((1 / 3 + 0.01))
+
+        time.sleep(1 / 3 + 0.01)
 
     return json_normalize(posts["items"])
