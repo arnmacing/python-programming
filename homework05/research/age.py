@@ -25,9 +25,7 @@ def age_predict(user_id: int) -> tp.Optional[float]:
             date = list(map(int, user["bdate"].split(".")))
             today = dt.date.today()
             age = today.year - date[2] - 1
-            if today.month > date[1] or (
-                today.month == date[1] and today.day > date[0]
-            ):
+            if today.month > date[1] or (today.month == date[1] and today.day > date[0]):
                 age += 1
             ages.append(age)
         except (KeyError, IndexError):

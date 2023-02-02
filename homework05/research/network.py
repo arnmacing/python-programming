@@ -56,9 +56,9 @@ def get_communities(net: tp.List[tp.Tuple[int, int]]) -> tp.Dict[int, tp.List[in
 
 
 def describe_communities(
-        clusters: tp.Dict[int, tp.List[int]],
-        friends: tp.List[tp.Dict[str, tp.Any]],
-        fields: tp.Optional[tp.List[str]] = None,
+    clusters: tp.Dict[int, tp.List[int]],
+    friends: tp.List[tp.Dict[str, tp.Any]],
+    fields: tp.Optional[tp.List[str]] = None,
 ) -> pd.DataFrame:
     if fields is None:
         fields = ["first_name", "last_name"]

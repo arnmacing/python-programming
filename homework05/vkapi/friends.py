@@ -115,4 +115,11 @@ def get_mutual(
             json_data.extend(curr_resp_json["response"])
         if i % 3 == 2:
             time.sleep(1)
-    return [MutualFriends(id=friend_list["id"], common_friends=friend_list["common_friends"], common_count=friend_list["common_count"],) for friend_list in json_data if "common_friends" in friend_list]
+    return [
+        MutualFriends(
+            id=friend_list["id"],
+            common_friends=friend_list["common_friends"],
+            common_count=friend_list["common_count"],
+        )
+        for friend_list in json_data if "common_friends" in friend_list
+    ]

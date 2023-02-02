@@ -26,11 +26,7 @@ class Session:
         self.ses = requests.Session()
         self.base_url = base_url
         self.timeout = timeout
-        self.retries = Retry(
-            total=max_retries,
-            backoff_factor=backoff_factor,
-            status_forcelist=[500]
-        )
+        self.retries = Retry(total=max_retries, backoff_factor=backoff_factor, status_forcelist=[500])
         self.ses.mount(base_url, HTTPAdapter(max_retries=self.retries))
 
     def get(self, url: str, *args: tp.Any, **kwargs: tp.Any) -> requests.Response:
