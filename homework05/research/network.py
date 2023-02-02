@@ -18,11 +18,10 @@ def ego_network(
     :param friends: Идентификаторы друзей, между которыми устанавливаются связи.
     """
     network = []
-    mut_friends = get_mutual(source_uid=user_id, target_uids=friends)
-    for some_friend in mut_friends:
-        id_s_friend = some_friend["id"]  # type: ignore
-        network.extend((id_s_friend, com_fr) for com_fr in some_friend["common_friends"])
-
+    connections = get_mutual(user_id, target_uids=friends)
+    for node in connections:
+        for common in node["common_friends"]:  # type: ignore
+            network.append((node["id"], common))  # type: ignore
     return network
 
 
