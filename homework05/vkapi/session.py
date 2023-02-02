@@ -16,17 +16,19 @@ class Session:
     """
 
     def __init__(
-            self,
-            base_url: str,
-            timeout: float = 5.0,
-            max_retries: int = 3,
-            backoff_factor: float = 0.3,
+        self,
+        base_url: str,
+        timeout: float = 5.0,
+        max_retries: int = 3,
+        backoff_factor: float = 0.3,
     ) -> None:
         super().__init__()
         self.ses = requests.Session()
         self.base_url = base_url
         self.timeout = timeout
-        self.retries = Retry(total=max_retries, backoff_factor=backoff_factor, status_forcelist=[500])
+        self.retries = Retry(
+            total=max_retries, backoff_factor=backoff_factor, status_forcelist=[500]
+        )
         self.ses.mount(base_url, HTTPAdapter(max_retries=self.retries))
 
     def get(self, url: str, *args: tp.Any, **kwargs: tp.Any) -> requests.Response:
