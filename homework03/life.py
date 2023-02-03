@@ -29,7 +29,10 @@ class GameOfLife:
         self.generations = 1
 
     def create_grid(self, randomize: bool = False) -> Grid:
-        return [[random.randint(0, 1) if randomize else 0 for _ in range(self.cols)] for _ in range(self.rows)]
+        return [
+            [random.randint(0, 1) if randomize else 0 for _ in range(self.cols)]
+            for _ in range(self.rows)
+        ]
 
     def get_neighbours(self, cell: Cell) -> Cells:
         # Copy from previous assignment
