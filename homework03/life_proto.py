@@ -48,7 +48,7 @@ class GameOfLife:
 
         # Создание списка клеток
         # PUT YOUR CODE HERE
-
+        self.grid = self.create_grid(randomize=True)
         running = True
         while running:
             for event in pygame.event.get():
