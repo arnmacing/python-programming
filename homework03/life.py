@@ -29,19 +29,14 @@ class GameOfLife:
         self.generations = 1
 
     def create_grid(self, randomize: bool = False) -> Grid:
-        # Copy from previous assignment
-        grid = [
-            [random.randint(0, 1) if randomize else 0 for _ in range(self.cols)]
-            for _ in range(self.rows)
-        ]
-        return grid
+        return [[random.randint(0, 1) if randomize else 0 for _ in range(self.cols)] for _ in range(self.rows)]
 
     def get_neighbours(self, cell: Cell) -> Cells:
         # Copy from previous assignment
         neighbours = []
         for i in range(-1, 2):
+            h = cell[0] + i
             for j in range(-1, 2):
-                h = cell[0] + i
                 w = cell[1] + j
                 if i == 0 and j == 0:
                     continue
@@ -80,18 +75,14 @@ class GameOfLife:
         """
         Не превысило ли текущее число поколений максимально допустимое.
         """
-        if self.max_generations and self.generations >= self.max_generations:
-            return True
-        return False
+        return bool(self.max_generations and self.generations >= self.max_generations)
 
     @property
     def is_changing(self) -> bool:
         """
         Изменилось ли состояние клеток с предыдущего шага.
         """
-        if self.prev_generation == self.curr_generation:
-            return False
-        return True
+        return self.prev_generation != self.curr_generation
 
     @staticmethod
     def from_file(filename: pathlib.Path) -> "GameOfLife":

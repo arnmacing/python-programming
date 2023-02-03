@@ -130,8 +130,8 @@ class GameOfLife:
         # Соседними считаются клетки по горизонтали, вертикали и диагоналям,
         # то есть, во всех направлениях.
         for i in range(-1, 2):
+            h = cell[0] + i
             for j in range(-1, 2):
-                h = cell[0] + i
                 w = cell[1] + j
                 if i == 0 and j == 0:  # мёртвые клетки
                     continue
