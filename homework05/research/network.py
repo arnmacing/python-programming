@@ -5,8 +5,7 @@ import community as community_louvain
 import matplotlib.pyplot as plt
 import networkx as nx
 import pandas as pd
-
-from vkapi.friends import get_mutual, get_friends
+from vkapi.friends import get_friends, get_mutual
 
 """
 Построить эгоцентричный граф друзей.
