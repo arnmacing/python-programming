@@ -126,8 +126,6 @@ def get_mutual(
     ]
 
 
-
 if __name__ == "__main__":
     print(get_friends(131912431))
     print(get_mutual(131912431, 1650))
-
