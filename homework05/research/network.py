@@ -5,7 +5,7 @@ import community as community_louvain
 import matplotlib.pyplot as plt
 import networkx as nx
 import pandas as pd
-from vkapi.friends import get_friends, get_mutual, MutualFriends
+from vkapi.friends import MutualFriends, get_friends, get_mutual
 
 """
 Построить эгоцентричный граф друзей.
@@ -24,7 +24,11 @@ def ego_network(
     if friends is None:
         friends_fields: tp.List[tp.Dict[str, tp.Any]] = get_friends(user_id, fields=["nickname", "is_closed, deactivate"]).items  # type: ignore
 
-        friends = [friend["id"] for friend in friends_fields if not friend.get("deactivate") and not friend.get("is_closed")]
+        friends = [
+            friend["id"]
+            for friend in friends_fields
+            if not friend.get("deactivate") and not friend.get("is_closed")
+        ]
 
     mutuals = get_mutual(user_id, target_uids=friends)
     for mutual in mutuals:
