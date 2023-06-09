@@ -14,4 +14,24 @@ def age_predict(user_id: int) -> tp.Optional[float]:
     :param user_id: Идентификатор пользователя.
     :return: Медианный возраст пользователя.
     """
-    pass
+    friends: tp.List[tp.Dict[str, tp.Any]] = get_friends(
+        user_id, fields=["bdate"]
+    ).items  # type:ignore
+    ages = []
+    user: tp.Dict[str, tp.Any]
+    for user in friends:
+        date: tp.List[int]
+        try:
+            date = list(map(int, user["bdate"].split(".")))
+            today = dt.date.today()
+            age = today.year - date[2] - 1
+            if today.month > date[1] or (today.month == date[1] and today.day > date[0]):
+                age += 1
+            ages.append(age)
+        except (KeyError, IndexError):
+            continue
+    return statistics.median(ages) if ages else None
+
+
+if __name__ == "__main__":
+    print(age_predict(131912431))

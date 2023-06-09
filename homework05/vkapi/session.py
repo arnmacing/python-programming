@@ -22,10 +22,21 @@ class Session:
         max_retries: int = 3,
         backoff_factor: float = 0.3,
     ) -> None:
-        pass
+        super().__init__()
+        self.ses = requests.Session()
+        self.base_url = base_url
+        self.timeout = timeout
+        self.retries = Retry(
+            total=max_retries, backoff_factor=backoff_factor, status_forcelist=[500]
+        )
+        self.ses.mount(base_url, HTTPAdapter(max_retries=self.retries))
 
     def get(self, url: str, *args: tp.Any, **kwargs: tp.Any) -> requests.Response:
-        pass
+        kwargs["timeout"] = kwargs.get("timeout", self.timeout)
+        return self.ses.get(f"{self.base_url}/{url}", *args, **kwargs)
 
     def post(self, url: str, *args: tp.Any, **kwargs: tp.Any) -> requests.Response:
-        pass
+        if "timeout" in kwargs:
+            self.timeout = kwargs["timeout"]
+
+        return self.ses.post(f"{self.base_url}/{url}", *args, **kwargs)
